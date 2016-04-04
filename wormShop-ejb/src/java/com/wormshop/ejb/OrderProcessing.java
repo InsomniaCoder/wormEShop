@@ -7,6 +7,8 @@ package com.wormshop.ejb;
 
 import javax.ejb.Stateful;
 import javax.ejb.LocalBean;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  *
@@ -15,6 +17,13 @@ import javax.ejb.LocalBean;
 @Stateful
 @LocalBean
 public class OrderProcessing {
+    
+    @PersistenceContext(unitName = "wormShop-ejbPU")
+    private EntityManager em;
+
+    public void persist(Object object) {
+        em.persist(object);
+    }
         
     
     // Add business logic below. (Right-click in editor and choose
