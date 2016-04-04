@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "AuthenticationServlet", urlPatterns = {"/login"})
 public class AuthenticationServlet extends HttpServlet {
 
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
