@@ -34,6 +34,7 @@ public class InitDataBean {
         defaultCustomer.setName("Worm1");
         em.persist(defaultCustomer);
         em.flush();   
+      
     }
     
     // Add business logic below. (Right-click in editor and choose

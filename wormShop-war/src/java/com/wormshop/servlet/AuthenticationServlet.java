@@ -12,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -32,6 +33,21 @@ public class AuthenticationServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        String user = (String)request.getSession().getAttribute("user");
+         HttpSession session  = request.getSession();
+         session.setMaxInactiveInterval(60);
+        if(user == null){
+            user = "newUser";
+            
+            session.setAttribute("user", user);
+            
+            request.getRequestDispatcher("sign_up.jsp").forward(request, response);
+        }else{
+            request.getRequestDispatcher("shop.jsp").forward(request, response);
+        }
+        
+        
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
