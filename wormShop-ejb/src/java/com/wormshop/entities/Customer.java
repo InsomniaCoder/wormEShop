@@ -31,9 +31,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Customer.findByCustomerId", query = "SELECT c FROM Customer c WHERE c.customerId = :customerId"),
     @NamedQuery(name = "Customer.findByName", query = "SELECT c FROM Customer c WHERE c.name = :name")})
 public class Customer implements Serializable {
-    @Size(max = 255)
-    @Column(name = "PASSWORD")
-    private String password;
+    
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -44,7 +42,10 @@ public class Customer implements Serializable {
     @Size(max = 255)
     @Column(name = "NAME")
     private String name;
-
+    @Size(max = 255)
+    @Column(name = "PASSWORD")
+    private String password;
+    
     public Customer() {
     }
 

@@ -27,7 +27,7 @@
 <div style="margin: 5% 35% 5% 35%; width: 360px" >
     <h3 style="margin: 30px 0 30px 0;">Create Worm Account</h3>
 
-    <form>
+    <form action="authentication" method="post">
         <div style="margin: 10px 0 10px 0; display: block;">
             <fieldset>
                 <div style="display: block">
@@ -58,6 +58,7 @@
         <div style="margin: 10px 0 10px 0;" align="center">
             <input type="submit" class="btn btn-primary btn-md" style="width: 100px; margin: 3px;" value="Sign Up">
         </div>
+        <input type="hidden" name="process" value="signup">
     </form>
 </div>
 </body>

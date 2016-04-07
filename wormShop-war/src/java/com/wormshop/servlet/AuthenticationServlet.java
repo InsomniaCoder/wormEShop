@@ -5,8 +5,11 @@
  */
 package com.wormshop.servlet;
 
+import com.wormshop.services.AuthenticationService;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,10 +21,9 @@ import javax.servlet.http.HttpSession;
  *
  * @author Tanat
  */
-@WebServlet(name = "AuthenticationServlet", urlPatterns = {"/login"})
+@WebServlet(name = "AuthenticationServlet", urlPatterns = {"/authentication"})
 public class AuthenticationServlet extends HttpServlet {
 
-    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -33,34 +35,23 @@ public class AuthenticationServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+       
         
-        String user = (String)request.getSession().getAttribute("user");
-         HttpSession session  = request.getSession();
-         session.setMaxInactiveInterval(60);
-        if(user == null){
-            user = "newUser";
-            
-            session.setAttribute("user", user);
-            
-            request.getRequestDispatcher("sign_up.jsp").forward(request, response);
-        }else{
-            request.getRequestDispatcher("shop.jsp").forward(request, response);
-        }
+        System.out.println("read name : " + request.getParameter("username"));
+        System.out.println("read password : " + request.getParameter("password"));
+        System.out.println("read process : " + request.getParameter("process"));
+
+    
+            String action = request.getParameter("process");
+            if("authenticate".equals(action)) {
+                System.out.println("authentication call");
+                doAuthenticate(request, response);
+            } else if ("signup".equals(action)) {
+                System.out.println("signup call");
+                doRegister(request, response);
+            }
         
-        
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet AuthenticationServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet AuthenticationServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -101,5 +92,29 @@ public class AuthenticationServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    private void doAuthenticate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        int customerId = AuthenticationService.getAuthenticationService().authenticate(username, password);
+        if (customerId != -1) {
+            Map<Integer, Integer> cart = new HashMap();
+            HttpSession session = request.getSession();
+            //15 minute inactive session
+            session.setMaxInactiveInterval(15 * 60);
+            session.setAttribute("customerId", customerId);
+            session.setAttribute("username", username);
+            session.setAttribute("cart", cart);
+
+            request.getRequestDispatcher("shop.jsp").forward(request, response);
+        } else {
+            response.sendRedirect("error.jsp");
+        }
+
+    }
+
+    private void doRegister(HttpServletRequest request, HttpServletResponse response) {
+
+    }
 
 }

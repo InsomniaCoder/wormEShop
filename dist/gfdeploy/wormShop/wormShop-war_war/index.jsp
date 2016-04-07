@@ -8,6 +8,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
+    <%  
+    if (null != session.getAttribute("customerId")) {
+            request.getRequestDispatcher("shop.jsp").forward(request, response);
+        }
+    %>
     <title>Worm Shop</title>
 
     <%--JQuery--%>
@@ -28,8 +33,7 @@
 
 <h3 align="center" style="margin: 30px 0 30px 0;">Welcome to Worm Shop</h3>
 
-<form action="shop.jsp" method="post">
-
+<form action="authentication" method="post">
         <div style="margin: 10px 0 10px 0; display: block;">
             <input type="text" id="username" style="width: 250px; height: 30px;" name="username" placeholder="Username" required>
         </div>
@@ -39,8 +43,8 @@
         <div style="margin: 10px 0 10px 0;">
             <input type="submit" class="btn btn-primary btn-md" style="width: 250px; margin: 3px;" value="Login">
         </div>
-        Not a member? <a href="sign_up.jsp">Sign up</a> now!!
-
+        Not a member yet? <a href="sign_up.jsp">Sign up</a> now!!
+        <input type="hidden" name="process" value="authenticate">
 </form>
 
 </div>
