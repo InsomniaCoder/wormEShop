@@ -24,7 +24,7 @@ public class AuthenticationService {
     
 
     protected AuthenticationService(){
-        
+            
     }
     
      private static AuthenticationService authenticationService;
@@ -38,9 +38,8 @@ public class AuthenticationService {
          return authenticationService;
      }
     
-     public Integer authenticate(String username, String password){
-         int customerId = customerDTO.findByIdAndPassword(username, password);
-         return (customerId == -1) ? -1 : customerId;
+     public Customer authenticate(String username, String password){
+        return  customerDTO.findByIdAndPassword(username, password);
      }
 
     private CustomerDAO lookupCustomerDTOBean() {

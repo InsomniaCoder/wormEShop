@@ -5,11 +5,18 @@
  */
 package com.wormshop.servlet;
 
+import com.wormshop.entities.Customer;
 import com.wormshop.services.AuthenticationService;
+import com.wormshop.services.CustomerService;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -23,6 +30,7 @@ import javax.servlet.http.HttpSession;
  */
 @WebServlet(name = "AuthenticationServlet", urlPatterns = {"/authentication"})
 public class AuthenticationServlet extends HttpServlet {
+    
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -96,16 +104,16 @@ public class AuthenticationServlet extends HttpServlet {
     private void doAuthenticate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        int customerId = AuthenticationService.getAuthenticationService().authenticate(username, password);
-        if (customerId != -1) {
-            Map<Integer, Integer> cart = new HashMap();
+        Customer foundCustomer = AuthenticationService.getAuthenticationService().authenticate(username, password);
+        if (foundCustomer != null) {
+            
+            CustomerService customerService = lookupCustomerServiceBean();
+            customerService.setCustomer(foundCustomer);
+            
             HttpSession session = request.getSession();
             //15 minute inactive session
             session.setMaxInactiveInterval(15 * 60);
-            session.setAttribute("customerId", customerId);
-            session.setAttribute("username", username);
-            session.setAttribute("cart", cart);
-
+            session.setAttribute("customer", customerService);  
             request.getRequestDispatcher("shop.jsp").forward(request, response);
         } else {
             response.sendRedirect("error.jsp");
@@ -115,6 +123,16 @@ public class AuthenticationServlet extends HttpServlet {
 
     private void doRegister(HttpServletRequest request, HttpServletResponse response) {
 
+    }
+
+    private CustomerService lookupCustomerServiceBean() {
+        try {
+            Context c = new InitialContext();
+            return (CustomerService) c.lookup("java:global/wormShop/wormShop-ejb/CustomerService!com.wormshop.services.CustomerService");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
+        }
     }
 
 }

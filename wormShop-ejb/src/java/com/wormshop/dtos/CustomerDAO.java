@@ -29,7 +29,7 @@ public class CustomerDAO {
 
     
     
-    public Integer findByIdAndPassword(String username, String password){
+    public Customer findByIdAndPassword(String username, String password){
 
         Customer findingCustomer = new Customer();
         findingCustomer.setName(username);
@@ -42,9 +42,9 @@ public class CustomerDAO {
         
         if(1 == resultList.size()){
             Customer foundCustomer = resultList.get(0);
-            return foundCustomer.getCustomerId();
+            return foundCustomer;
         }else{
-            return -1;
+            return null;
         }
     }
     // Add business logic below. (Right-click in editor and choose

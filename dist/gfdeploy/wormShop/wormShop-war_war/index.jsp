@@ -9,7 +9,7 @@
 <html>
 <head>
     <%  
-    if (null != session.getAttribute("customerId")) {
+    if (null != session.getAttribute("customer")) {
             request.getRequestDispatcher("shop.jsp").forward(request, response);
         }
     %>
