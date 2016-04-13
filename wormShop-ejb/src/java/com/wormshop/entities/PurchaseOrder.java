@@ -28,57 +28,54 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "PURCHASE_ORDER")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "PurchaseOrder.findAll", query = "SELECT p FROM PurchaseOrder p"),
-    @NamedQuery(name = "PurchaseOrder.findByOrderId", query = "SELECT p FROM PurchaseOrder p WHERE p.orderId = :orderId"),
-    @NamedQuery(name = "PurchaseOrder.findByDatetime", query = "SELECT p FROM PurchaseOrder p WHERE p.datetime = :datetime"),
-    @NamedQuery(name = "PurchaseOrder.findByOrderstatus", query = "SELECT p FROM PurchaseOrder p WHERE p.orderstatus = :orderstatus"),
-    @NamedQuery(name = "PurchaseOrder.findByTotal", query = "SELECT p FROM PurchaseOrder p WHERE p.total = :total")})
+    @NamedQuery(name = "PurchaseOrder.findAll", query = "SELECT p FROM PurchaseOrder p")})
 public class PurchaseOrder implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @NotNull
-    @Column(name = "ORDER_ID")
-    private Integer orderId;
-    @Column(name = "DATETIME")
-    @Temporal(TemporalType.DATE)
-    private Date datetime;
-    @Size(max = 20)
-    @Column(name = "ORDERSTATUS")
-    private String orderstatus;
+    @Column(name = "PURCHASE_ID")
+    private Integer purchaseId;
+    @Size(max = 255)
+    @Column(name = "ORDER_STATUS")
+    private String orderStatus;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "TOTAL")
     private Double total;
+    @Column(name = "DATETIME")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date datetime;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "CUSTOMER_ID")
+    private int customerId;
 
     public PurchaseOrder() {
     }
 
-    public PurchaseOrder(Integer orderId) {
-        this.orderId = orderId;
+    public PurchaseOrder(Integer purchaseId) {
+        this.purchaseId = purchaseId;
     }
 
-    public Integer getOrderId() {
-        return orderId;
+    public PurchaseOrder(Integer purchaseId, int customerId) {
+        this.purchaseId = purchaseId;
+        this.customerId = customerId;
     }
 
-    public void setOrderId(Integer orderId) {
-        this.orderId = orderId;
+    public Integer getPurchaseId() {
+        return purchaseId;
     }
 
-    public Date getDatetime() {
-        return datetime;
+    public void setPurchaseId(Integer purchaseId) {
+        this.purchaseId = purchaseId;
     }
 
-    public void setDatetime(Date datetime) {
-        this.datetime = datetime;
+    public String getOrderStatus() {
+        return orderStatus;
     }
 
-    public String getOrderstatus() {
-        return orderstatus;
-    }
-
-    public void setOrderstatus(String orderstatus) {
-        this.orderstatus = orderstatus;
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
     }
 
     public Double getTotal() {
@@ -89,10 +86,26 @@ public class PurchaseOrder implements Serializable {
         this.total = total;
     }
 
+    public Date getDatetime() {
+        return datetime;
+    }
+
+    public void setDatetime(Date datetime) {
+        this.datetime = datetime;
+    }
+
+    public int getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (orderId != null ? orderId.hashCode() : 0);
+        hash += (purchaseId != null ? purchaseId.hashCode() : 0);
         return hash;
     }
 
@@ -103,7 +116,7 @@ public class PurchaseOrder implements Serializable {
             return false;
         }
         PurchaseOrder other = (PurchaseOrder) object;
-        if ((this.orderId == null && other.orderId != null) || (this.orderId != null && !this.orderId.equals(other.orderId))) {
+        if ((this.purchaseId == null && other.purchaseId != null) || (this.purchaseId != null && !this.purchaseId.equals(other.purchaseId))) {
             return false;
         }
         return true;
@@ -111,7 +124,7 @@ public class PurchaseOrder implements Serializable {
 
     @Override
     public String toString() {
-        return "com.wormshop.ejb.PurchaseOrder[ orderId=" + orderId + " ]";
+        return "com.wormshop.entities.PurchaseOrder[ purchaseId=" + purchaseId + " ]";
     }
     
 }

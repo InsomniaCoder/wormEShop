@@ -24,58 +24,47 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "ORDER_DETAIL")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "OrderDetail.findAll", query = "SELECT o FROM OrderDetail o"),
-    @NamedQuery(name = "OrderDetail.findById", query = "SELECT o FROM OrderDetail o WHERE o.id = :id"),
-    @NamedQuery(name = "OrderDetail.findByOrderId", query = "SELECT o FROM OrderDetail o WHERE o.orderId = :orderId"),
-    @NamedQuery(name = "OrderDetail.findByProductId", query = "SELECT o FROM OrderDetail o WHERE o.productId = :productId"),
-    @NamedQuery(name = "OrderDetail.findByAmount", query = "SELECT o FROM OrderDetail o WHERE o.amount = :amount"),
-    @NamedQuery(name = "OrderDetail.findByTotal", query = "SELECT o FROM OrderDetail o WHERE o.total = :total")})
+    @NamedQuery(name = "OrderDetail.findAll", query = "SELECT o FROM OrderDetail o")})
 public class OrderDetail implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @NotNull
-    @Column(name = "ID")
-    private Integer id;
-    @Column(name = "ORDER_ID")
-    private Integer orderId;
-    @Column(name = "PRODUCT_ID")
-    private Integer productId;
+    @Column(name = "DETAIL_ID")
+    private Integer detailId;
     @Column(name = "AMOUNT")
     private Integer amount;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "TOTAL")
     private Double total;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "PRODUCT_ID")
+    private int productId;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "PURCHASE_ID")
+    private int purchaseId;
 
     public OrderDetail() {
     }
 
-    public OrderDetail(Integer id) {
-        this.id = id;
+    public OrderDetail(Integer detailId) {
+        this.detailId = detailId;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(Integer orderId) {
-        this.orderId = orderId;
-    }
-
-    public Integer getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Integer productId) {
+    public OrderDetail(Integer detailId, int productId, int purchaseId) {
+        this.detailId = detailId;
         this.productId = productId;
+        this.purchaseId = purchaseId;
+    }
+
+    public Integer getDetailId() {
+        return detailId;
+    }
+
+    public void setDetailId(Integer detailId) {
+        this.detailId = detailId;
     }
 
     public Integer getAmount() {
@@ -94,10 +83,26 @@ public class OrderDetail implements Serializable {
         this.total = total;
     }
 
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
+
+    public int getPurchaseId() {
+        return purchaseId;
+    }
+
+    public void setPurchaseId(int purchaseId) {
+        this.purchaseId = purchaseId;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += (detailId != null ? detailId.hashCode() : 0);
         return hash;
     }
 
@@ -108,7 +113,7 @@ public class OrderDetail implements Serializable {
             return false;
         }
         OrderDetail other = (OrderDetail) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.detailId == null && other.detailId != null) || (this.detailId != null && !this.detailId.equals(other.detailId))) {
             return false;
         }
         return true;
@@ -116,7 +121,7 @@ public class OrderDetail implements Serializable {
 
     @Override
     public String toString() {
-        return "com.wormshop.ejb.OrderDetail[ id=" + id + " ]";
+        return "com.wormshop.entities.OrderDetail[ detailId=" + detailId + " ]";
     }
     
 }

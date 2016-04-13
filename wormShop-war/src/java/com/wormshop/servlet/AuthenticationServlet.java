@@ -9,9 +9,6 @@ import com.wormshop.entities.Customer;
 import com.wormshop.services.AuthenticationService;
 import com.wormshop.services.CustomerService;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.Context;
@@ -106,17 +103,20 @@ public class AuthenticationServlet extends HttpServlet {
         String password = request.getParameter("password");
         Customer foundCustomer = AuthenticationService.getAuthenticationService().authenticate(username, password);
         if (foundCustomer != null) {
+             
+            HttpSession session = request.getSession(true);
             
-            CustomerService customerService = lookupCustomerServiceBean();
-            customerService.setCustomer(foundCustomer);
+            //30 minute inactive session
+                System.out.println("user : "+foundCustomer.getName()+" is logging in ...");
+                 session.setMaxInactiveInterval(30 * 60);
+                 CustomerService customerService = lookupCustomerServiceBean();
+                 customerService.setCustomer(foundCustomer);
+                 session.setAttribute("customer", customerService);  
+                 //request.getRequestDispatcher("shop.jsp").forward(request, response);
+                 response.sendRedirect("shop.jsp");
             
-            HttpSession session = request.getSession();
-            //15 minute inactive session
-            session.setMaxInactiveInterval(15 * 60);
-            session.setAttribute("customer", customerService);  
-            request.getRequestDispatcher("shop.jsp").forward(request, response);
         } else {
-            response.sendRedirect("error.jsp");
+                 response.sendRedirect("error.jsp");
         }
 
     }

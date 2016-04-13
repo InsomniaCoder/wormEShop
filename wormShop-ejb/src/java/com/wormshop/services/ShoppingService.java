@@ -34,19 +34,48 @@ public class ShoppingService {
      private static ShoppingService shoppingService;
      ProductDAO productDAO = lookupProductDAOBean();
      
-     
+     /**
+      * 
+      * @return singleton instance of ShoppingService itself 
+      */ 
      public static  ShoppingService getShoppingService(){
          if(null == shoppingService){
              shoppingService = new ShoppingService();
          }
          return shoppingService;
      }
-
+     
+    /**
+     * check from db that product amount is enough
+     * @param productId
+     * @param checkingAmount
+     * @return
+     */
+    public boolean productStockIsAvailable(Integer productId,Integer checkingAmount){
+        
+        Product findingProduct = productDAO.findProductById(productId);
+        
+        if( findingProduct.getAmount() > checkingAmount){
+            return true;
+        }else{
+            return false;
+        }
+    } 
+     
+     
+    /**
+     * query all of the product
+     * @return list of product object
+     */
     public List<Product> getAllProduct(){
         return productDAO.getAllProduct();
     }
-     
-     
+    
+    
+    
+    public Product findProductById(Integer prodId){
+        return productDAO.findProductById(prodId);
+    }
         private ProductDAO lookupProductDAOBean() {
         try {
             Context c = new InitialContext();

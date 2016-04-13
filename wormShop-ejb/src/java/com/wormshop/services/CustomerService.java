@@ -20,9 +20,33 @@ import javax.ejb.LocalBean;
 @LocalBean
 public class CustomerService {
 
+    private double totalPrice;
     private Customer customer = null;
     private Map<Product,Integer> customerCart = new HashMap<Product, Integer>();
-    private int getCalled = 0;
+    
+
+    public void calculateTotalPrice(){
+                
+            totalPrice = 0;
+            
+            for (Map.Entry<Product,Integer> eachItem : customerCart.entrySet()) {
+                double price = eachItem.getKey().getProductPrice();
+                int amount = eachItem.getValue();
+                totalPrice+=(price*amount);
+            }
+    }
+    
+    /**
+     * return fresh total every time total price get queried
+     */
+    public double getTotalPrice() {
+        calculateTotalPrice();
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
 
     public Customer getCustomer() {
         return customer;
@@ -38,13 +62,5 @@ public class CustomerService {
 
     public Map<Product, Integer> getCustomerCart() {
         return customerCart;
-    }
-
-    public int getGetCalled() {
-        return getCalled;
-    }
-
-    public void setGetCalled(int getCalled) {
-        this.getCalled = getCalled;
     }
 }

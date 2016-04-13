@@ -28,7 +28,7 @@ public class AuthenticationService {
     }
     
      private static AuthenticationService authenticationService;
-     private CustomerDAO customerDTO = lookupCustomerDTOBean();
+     private CustomerDAO customerDAO = lookupCustomerDTOBean();
      
      
      public static  AuthenticationService getAuthenticationService(){
@@ -39,7 +39,7 @@ public class AuthenticationService {
      }
     
      public Customer authenticate(String username, String password){
-        return  customerDTO.findByIdAndPassword(username, password);
+        return  customerDAO.findByIdAndPassword(username, password);
      }
 
     private CustomerDAO lookupCustomerDTOBean() {

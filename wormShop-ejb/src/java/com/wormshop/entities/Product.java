@@ -25,11 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "PRODUCT")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Product.findAll", query = "SELECT p FROM Product p"),
-    @NamedQuery(name = "Product.findByProductId", query = "SELECT p FROM Product p WHERE p.productId = :productId"),
-    @NamedQuery(name = "Product.findByProductName", query = "SELECT p FROM Product p WHERE p.productName = :productName"),
-    @NamedQuery(name = "Product.findByProductPrice", query = "SELECT p FROM Product p WHERE p.productPrice = :productPrice"),
-    @NamedQuery(name = "Product.findByCategory", query = "SELECT p FROM Product p WHERE p.category = :category")})
+    @NamedQuery(name = "Product.findAll", query = "SELECT p FROM Product p")})
 public class Product implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -46,6 +42,8 @@ public class Product implements Serializable {
     @Size(max = 255)
     @Column(name = "CATEGORY")
     private String category;
+    @Column(name = "AMOUNT")
+    private Integer amount;
 
     public Product() {
     }
@@ -86,6 +84,14 @@ public class Product implements Serializable {
         this.category = category;
     }
 
+    public Integer getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Integer amount) {
+        this.amount = amount;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -108,7 +114,7 @@ public class Product implements Serializable {
 
     @Override
     public String toString() {
-        return "com.wormshop.ejb.Product[ productId=" + productId + " ]";
+        return "com.wormshop.entities.Product[ productId=" + productId + " ]";
     }
     
 }
