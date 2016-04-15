@@ -7,18 +7,24 @@ package com.wormshop.entities;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -28,7 +34,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "PURCHASE_ORDER")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "PurchaseOrder.findAll", query = "SELECT p FROM PurchaseOrder p")})
+    @NamedQuery(name = "PurchaseOrder.findAll", query = "SELECT p FROM PurchaseOrder p"),
+    @NamedQuery(name = "PurchaseOrder.findByPurchaseId", query = "SELECT p FROM PurchaseOrder p WHERE p.purchaseId = :purchaseId"),
+    @NamedQuery(name = "PurchaseOrder.findByOrderStatus", query = "SELECT p FROM PurchaseOrder p WHERE p.orderStatus = :orderStatus"),
+    @NamedQuery(name = "PurchaseOrder.findByTotal", query = "SELECT p FROM PurchaseOrder p WHERE p.total = :total"),
+    @NamedQuery(name = "PurchaseOrder.findByDatetime", query = "SELECT p FROM PurchaseOrder p WHERE p.datetime = :datetime")})
 public class PurchaseOrder implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -43,23 +53,19 @@ public class PurchaseOrder implements Serializable {
     @Column(name = "TOTAL")
     private Double total;
     @Column(name = "DATETIME")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date datetime;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "CUSTOMER_ID")
-    private int customerId;
+    @JoinColumn(name = "CUSTOMER_ID", referencedColumnName = "CUSTOMER_ID")
+    @ManyToOne(optional = false)
+    private Customer customerId;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "purchaseId")
+    private List<OrderDetail> orderDetailList;
 
     public PurchaseOrder() {
     }
 
     public PurchaseOrder(Integer purchaseId) {
         this.purchaseId = purchaseId;
-    }
-
-    public PurchaseOrder(Integer purchaseId, int customerId) {
-        this.purchaseId = purchaseId;
-        this.customerId = customerId;
     }
 
     public Integer getPurchaseId() {
@@ -94,12 +100,21 @@ public class PurchaseOrder implements Serializable {
         this.datetime = datetime;
     }
 
-    public int getCustomerId() {
+    public Customer getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(int customerId) {
+    public void setCustomerId(Customer customerId) {
         this.customerId = customerId;
+    }
+
+    @XmlTransient
+    public List<OrderDetail> getOrderDetailList() {
+        return orderDetailList;
+    }
+
+    public void setOrderDetailList(List<OrderDetail> orderDetailList) {
+        this.orderDetailList = orderDetailList;
     }
 
     @Override

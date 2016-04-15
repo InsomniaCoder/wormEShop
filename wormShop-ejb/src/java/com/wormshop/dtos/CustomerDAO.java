@@ -21,21 +21,18 @@ import javax.persistence.TypedQuery;
 @Stateless
 @LocalBean
 public class CustomerDAO {
+    @PersistenceContext(unitName = "wormShop-ejbPU")
+    private EntityManager em;
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
-    @PersistenceContext(unitName = "wormShop-ejbPU")
-    private EntityManager em;
+ 
 
     
     
     public Customer findByIdAndPassword(String username, String password){
 
-        Customer findingCustomer = new Customer();
-        findingCustomer.setName(username);
-        findingCustomer.setPassword(password);
-        
-        TypedQuery<Customer> findQuery = em.createQuery("SELECT customer FROM Customer customer WHERE customer.name = :name AND customer.password = :password", Customer.class);
+        TypedQuery<Customer> findQuery = em.createQuery("SELECT customer FROM Customer customer WHERE customer.username = :name AND customer.password = :password", Customer.class);
         findQuery.setParameter("name", username);
         findQuery.setParameter("password", password);
         List<Customer> resultList = findQuery.getResultList();
@@ -47,10 +44,71 @@ public class CustomerDAO {
             return null;
         }
     }
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+    
+     public Customer create(String name,String pw){
+    Customer c = new Customer();
+    String queryStr = " select MAX(c.customerId) from Customer c  ";
+        Query query = em.createQuery(queryStr);
+        Object result = query.getSingleResult();
+        
+        if(result==null||result==""){
+           c.setCustomerId(1);
+           c.setUsername(name);
+           c.setPassword(pw);
+           em.persist(c);
+        }
+        else{
+           int newPk =(int)result;
+           newPk++;
+           c.setCustomerId(newPk);
+           c.setUsername(name);
+           c.setPassword(pw);
+           em.persist(c);
+        }      
+      return c;
+    }
+     
+      public double getCredit(int id){
+       String queryStr = " select c from Customer c where c.customerId = ?1   ";
+        Query query = em.createQuery(queryStr).setParameter(1,id);
+        List<Customer> cus = query.getResultList();
+        if(!(cus.isEmpty())){
+              Object a = cus.get(0).getCredit();
+              Double credit = (Double)a;
+              return credit;
+        }
+        return 0;
+   }
+   
+    
+    public boolean debit(int id ,double amount){
+       String queryStr = " SELECT c FROM Customer c where c.customerId = ?1   ";
+       Query query = em.createQuery(queryStr).setParameter(1,id);
+       List<Customer> cus = query.getResultList();
+      
+       if(!(cus.isEmpty())){
+           Object a = cus.get(0).getCredit();
+           double credit = (double)a;
+             if(amount>credit){
+                 return false;
+             }
+             else{
+                 double balanceCredit = credit-amount;
+                 String queryStat = " update Customer c set c.credit = ?1 where c.customerId = ?2   ";
+                 Query queryUpdate = em.createQuery(queryStat).setParameter(1,balanceCredit).setParameter(2,id);
+                 int updateCount = queryUpdate.executeUpdate();
+                 return true;
+             }
+        }
+      
+       return false;// no id 
+        
+   }
+    
 
     public void persist(Object object) {
         em.persist(object);
     }
+
+  
 }

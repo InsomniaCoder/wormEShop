@@ -6,16 +6,20 @@
 package com.wormshop.entities;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -25,7 +29,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "CUSTOMER")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Customer.findAll", query = "SELECT c FROM Customer c")})
+    @NamedQuery(name = "Customer.findAll", query = "SELECT c FROM Customer c"),
+    @NamedQuery(name = "Customer.findByCustomerId", query = "SELECT c FROM Customer c WHERE c.customerId = :customerId"),
+    @NamedQuery(name = "Customer.findByUsername", query = "SELECT c FROM Customer c WHERE c.username = :username"),
+    @NamedQuery(name = "Customer.findByPassword", query = "SELECT c FROM Customer c WHERE c.password = :password"),
+    @NamedQuery(name = "Customer.findByCredit", query = "SELECT c FROM Customer c WHERE c.credit = :credit")})
 public class Customer implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -34,14 +42,16 @@ public class Customer implements Serializable {
     @Column(name = "CUSTOMER_ID")
     private Integer customerId;
     @Size(max = 255)
-    @Column(name = "NAME")
-    private String name;
+    @Column(name = "USERNAME")
+    private String username;
     @Size(max = 255)
     @Column(name = "PASSWORD")
     private String password;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "CREDIT")
     private Double credit;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerId")
+    private List<PurchaseOrder> purchaseOrderList;
 
     public Customer() {
     }
@@ -58,12 +68,12 @@ public class Customer implements Serializable {
         this.customerId = customerId;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -80,6 +90,15 @@ public class Customer implements Serializable {
 
     public void setCredit(Double credit) {
         this.credit = credit;
+    }
+
+    @XmlTransient
+    public List<PurchaseOrder> getPurchaseOrderList() {
+        return purchaseOrderList;
+    }
+
+    public void setPurchaseOrderList(List<PurchaseOrder> purchaseOrderList) {
+        this.purchaseOrderList = purchaseOrderList;
     }
 
     @Override

@@ -12,6 +12,7 @@ import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 /**
@@ -46,6 +47,20 @@ public class ProductDAO {
         findQuery.setParameter("productId", prodId);
         return findQuery.getSingleResult();
     }
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+      public int getAmount(int productId){
+   
+        String queryStr = " select p.amountStock from Product p where p.productId = ?1   ";
+        Query query = em.createQuery(queryStr).setParameter(1,productId);
+        Object amountQuery = query.getSingleResult();
+        int amount = (int)amountQuery;
+        return amount;
+    }
+   
+       public void updateProductAmount(Product product ,double amount){
+         Product foundProduct = em.find(Product.class, product.getProductId());
+         int reductAmount = (int)amount;
+         foundProduct.setAmountStock(product.getAmountStock() - reductAmount);
+         em.persist(foundProduct);
+         em.flush();
+   }
 }

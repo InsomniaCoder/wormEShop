@@ -6,16 +6,20 @@
 package com.wormshop.entities;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -25,7 +29,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "PRODUCT")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Product.findAll", query = "SELECT p FROM Product p")})
+    @NamedQuery(name = "Product.findAll", query = "SELECT p FROM Product p"),
+    @NamedQuery(name = "Product.findByProductId", query = "SELECT p FROM Product p WHERE p.productId = :productId"),
+    @NamedQuery(name = "Product.findByProductName", query = "SELECT p FROM Product p WHERE p.productName = :productName"),
+    @NamedQuery(name = "Product.findByProductPrice", query = "SELECT p FROM Product p WHERE p.productPrice = :productPrice"),
+    @NamedQuery(name = "Product.findByCategory", query = "SELECT p FROM Product p WHERE p.category = :category"),
+    @NamedQuery(name = "Product.findByAmountStock", query = "SELECT p FROM Product p WHERE p.amountStock = :amountStock")})
 public class Product implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -42,8 +51,10 @@ public class Product implements Serializable {
     @Size(max = 255)
     @Column(name = "CATEGORY")
     private String category;
-    @Column(name = "AMOUNT")
-    private Integer amount;
+    @Column(name = "AMOUNT_STOCK")
+    private Integer amountStock;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "productId")
+    private List<OrderDetail> orderDetailList;
 
     public Product() {
     }
@@ -84,12 +95,21 @@ public class Product implements Serializable {
         this.category = category;
     }
 
-    public Integer getAmount() {
-        return amount;
+    public Integer getAmountStock() {
+        return amountStock;
     }
 
-    public void setAmount(Integer amount) {
-        this.amount = amount;
+    public void setAmountStock(Integer amountStock) {
+        this.amountStock = amountStock;
+    }
+
+    @XmlTransient
+    public List<OrderDetail> getOrderDetailList() {
+        return orderDetailList;
+    }
+
+    public void setOrderDetailList(List<OrderDetail> orderDetailList) {
+        this.orderDetailList = orderDetailList;
     }
 
     @Override

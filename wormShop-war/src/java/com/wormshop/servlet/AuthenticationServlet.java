@@ -105,18 +105,21 @@ public class AuthenticationServlet extends HttpServlet {
         if (foundCustomer != null) {
              
             HttpSession session = request.getSession(true);
+            session.setMaxInactiveInterval(60*60);
             
             //30 minute inactive session
-                System.out.println("user : "+foundCustomer.getName()+" is logging in ...");
+                System.out.println("user : "+foundCustomer.getUsername()+" is logging in ...");
                  session.setMaxInactiveInterval(30 * 60);
                  CustomerService customerService = lookupCustomerServiceBean();
                  customerService.setCustomer(foundCustomer);
                  session.setAttribute("customer", customerService);  
                  //request.getRequestDispatcher("shop.jsp").forward(request, response);
                  response.sendRedirect("shop.jsp");
+                  return;
             
         } else {
                  response.sendRedirect("error.jsp");
+                  return;
         }
 
     }

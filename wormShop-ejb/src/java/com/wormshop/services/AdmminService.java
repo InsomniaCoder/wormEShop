@@ -28,13 +28,13 @@ import javax.naming.NamingException;
  *
  * @author Tanat
  */
-public class ShoppingService {
+public class AdmminService {
 
-    protected ShoppingService(){
+    protected AdmminService(){
         
     }
 
-     private static ShoppingService shoppingService;
+     private static AdmminService adminService;
      
      ProductDAO productDAO = lookupProductDAOBean();
      OrderDetailDAO orderDetailDAO = lookupOrderDetailDAOBean();
@@ -44,74 +44,15 @@ public class ShoppingService {
       * 
       * @return singleton instance of ShoppingService itself 
       */ 
-     public static  ShoppingService getShoppingService(){
-         if(null == shoppingService){
-             shoppingService = new ShoppingService();
+     public static  AdmminService getAdminService(){
+         if(null == adminService){
+             adminService = new AdmminService();
          }
-         return shoppingService;
+         return adminService;
      }
      
-    /*****************
-     * Shop page
-     */
-     
-    /**
-     * query all of the product
-     * @return list of product object
-     */
-    public List<Product> getAllProduct(){
-        return productDAO.getAllProduct();
-    }
-    
-    public Product findProductById(Integer prodId){
-        return productDAO.findProductById(prodId);
-    }
-   
-      /**********
-       * purchasing 
-       */  
-    public void saveOrder(PurchaseOrder order){
-       purchaseOrderDAO.create(order);
-    }
-    public void saveOrderDetails(List<OrderDetail> detailList){
-       for(OrderDetail orderDetail : detailList){
-           orderDetailDAO.create(orderDetail);
-       }
-    }
-        
-        /**
-     * check from db that product amount is enough
-     * @param productId id of the finding product
-     * @param checkingAmount required amount to check
-     * @return
-     */
-    public boolean productStockIsAvailable(Integer productId,Integer checkingAmount){
-        
-        Product findingProduct = productDAO.findProductById(productId);
-        
-        if( findingProduct.getAmountStock() >= checkingAmount){
-            return true;
-        }else{
-            return false;
-        }
-    } 
-
-    public void updatePurchaseStatus(PurchaseOrder purchaseOrder){
-        purchaseOrderDAO.setOrderStatus(purchaseOrder.getPurchaseId(),purchaseOrder.getOrderStatus());
-    }
-    
-    public double getCustomerCredit(Integer custId){
-        return customerDAO.getCredit(custId);
-    }
-    
-    public void debitCustomerCredit(Integer custId,Double totalPrice){
-          customerDAO.debit(custId, totalPrice);
-    }
-    
-    public void reduceItemAmount(Map<Product, Integer> customerCart) {
-        for (Map.Entry<Product, Integer> eachItem : customerCart.entrySet()) {
-            productDAO.updateProductAmount(eachItem.getKey(),eachItem.getValue());
-        }
+    public List<PurchaseOrder> getAllWaitingOrder(){
+        return purchaseOrderDAO.findAllWaitingOrder();
     }
 
     private CustomerDAO lookupCustomerDAOBean() {

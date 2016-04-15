@@ -46,7 +46,8 @@ public class CartAddingServlet extends HttpServlet {
             Product foundProduct = ShoppingService.getShoppingService().findProductById(productId);
             customerService.getCustomerCart().put(foundProduct, productAmount);
             System.out.println("added "+foundProduct.getProductName()+" to cart");
-             response.sendRedirect("shop.jsp");
+            response.sendRedirect("shop.jsp");
+            return;
         }
     
 
