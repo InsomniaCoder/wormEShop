@@ -28,13 +28,13 @@ import javax.naming.NamingException;
  *
  * @author Tanat
  */
-public class AdmminService {
+public class AdminService {
 
-    protected AdmminService(){
+    protected AdminService(){
         
     }
 
-     private static AdmminService adminService;
+     private static AdminService adminService;
      
      ProductDAO productDAO = lookupProductDAOBean();
      OrderDetailDAO orderDetailDAO = lookupOrderDetailDAOBean();
@@ -44,9 +44,9 @@ public class AdmminService {
       * 
       * @return singleton instance of ShoppingService itself 
       */ 
-     public static  AdmminService getAdminService(){
+     public static  AdminService getAdminService(){
          if(null == adminService){
-             adminService = new AdmminService();
+             adminService = new AdminService();
          }
          return adminService;
      }
@@ -54,7 +54,13 @@ public class AdmminService {
     public List<PurchaseOrder> getAllWaitingOrder(){
         return purchaseOrderDAO.findAllWaitingOrder();
     }
+    
+    public PurchaseOrder find(int poId){
+        return purchaseOrderDAO.findPurchaseOrderById(poId);
+    }
 
+    
+    
     private CustomerDAO lookupCustomerDAOBean() {
         try {
             Context c = new InitialContext();

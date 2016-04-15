@@ -114,6 +114,10 @@ public class AuthenticationServlet extends HttpServlet {
                  customerService.setCustomer(foundCustomer);
                  session.setAttribute("customer", customerService);  
                  //request.getRequestDispatcher("shop.jsp").forward(request, response);
+                 if(foundCustomer.getUsername().equalsIgnoreCase("admin")){
+                     response.sendRedirect("admin.jsp");
+                     return;
+                 }
                  response.sendRedirect("shop.jsp");
                   return;
             

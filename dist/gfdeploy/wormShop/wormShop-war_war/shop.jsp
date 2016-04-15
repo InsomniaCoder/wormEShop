@@ -20,15 +20,20 @@
         CustomerService sessionCustomer = (CustomerService)session.getAttribute("customer");
     if (null == sessionCustomer) {
             request.getRequestDispatcher("index.jsp");
+            return;
+     }
+    Customer customer = sessionCustomer.getCustomer();
+    if (customer.getUsername().equals("admin")) {
+        response.sendRedirect("admin.jsp");
+            return;
         }
-        Customer customer = sessionCustomer.getCustomer();
     %>
     <title>Worm Shop</title>
 </head>
 <body>
     <div id="header" style="margin-bottom: 10px; float: right; padding-right: 10%;padding-top: 2%;height: 5%;">
-       Welcome    <%= customer.getUsername()%> , 
-       your balance is  <%= customer.getCredit()%>
+        <h3> Welcome    <%= customer.getUsername()%> ,  </h3>
+        <h3>your balance is  <%= customer.getCredit()%></h3>
     </div>
        
     <div id="productDiv" style="float: left; clear: both; padding-left: 10px;width: 75%;border:  blue;">
@@ -71,8 +76,8 @@
         </table>
     </div>
     
-    <div  id="cartDiv" style="float:right;padding-right: 50px;width: 20%;text-align: center;">
-        Shopping Cart :
+    <div  id="cartDiv" style="float:right;padding-right: 50px;width: 20%;text-align: center;margin-top: 25px;">
+        <h4>Shopping Cart : </h4>
         <table id="cartTable" style="width: 100%; margin-top: 20px;">
             <tbody>
         <% 

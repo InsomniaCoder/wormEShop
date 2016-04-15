@@ -113,6 +113,12 @@ public class ShoppingService {
             productDAO.updateProductAmount(eachItem.getKey(),eachItem.getValue());
         }
     }
+    
+     public void reduceItemAmountFromList(  List<OrderDetail> details) {
+        for (OrderDetail eachItem : details) {
+            productDAO.updateProductAmount(eachItem.getProductId(),eachItem.getAmount());
+        }
+    }
 
     private CustomerDAO lookupCustomerDAOBean() {
         try {
@@ -153,4 +159,6 @@ public class ShoppingService {
             throw new RuntimeException(ne);
         }
     }
+
+  
 }

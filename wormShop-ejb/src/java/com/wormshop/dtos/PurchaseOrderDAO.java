@@ -59,5 +59,9 @@ public class PurchaseOrderDAO {
         TypedQuery<PurchaseOrder> waitingQuery = em.createQuery(findWaitingQuery, PurchaseOrder.class);
         return waitingQuery.getResultList();
     }
+
+    public PurchaseOrder findPurchaseOrderById(int poId) {
+        return em.find(PurchaseOrder.class, poId);
+    }
    
 }
