@@ -10,6 +10,7 @@ import com.wormshop.entities.OrderDetail;
 import com.wormshop.entities.OrderStatus;
 import com.wormshop.entities.Product;
 import com.wormshop.entities.PurchaseOrder;
+import com.wormshop.services.AuthenticationService;
 import com.wormshop.services.CustomerService;
 import com.wormshop.services.ShoppingService;
 import java.io.IOException;
@@ -92,6 +93,8 @@ public class OrderProcessingServlet extends HttpServlet {
              shoppingService.updatePurchaseStatus(order);
             //route to page
              customerService.getCustomerCart().clear();
+             customer =  AuthenticationService.getAuthenticationService().authenticate(customer.getUsername(), customer.getPassword());
+             customerService.setCustomer(customer);
              request.setAttribute("result", "Your transaction is finished! items will be delivered to you soon.");
              request.getRequestDispatcher("result.jsp").forward(request, response);  
               return;

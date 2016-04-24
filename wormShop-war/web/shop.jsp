@@ -31,9 +31,10 @@
     <title>Worm Shop</title>
 </head>
 <body>
-    <div id="header" style="margin-bottom: 10px; float: right; padding-right: 10%;padding-top: 2%;height: 5%;">
+    <div id="header" style="margin-bottom: 10px; float: right; padding-right: 10%;padding-top: 2%;height: 12%;">
         <h3> Welcome    <%= customer.getUsername()%> ,  </h3>
         <h3>your balance is  <%= customer.getCredit()%></h3>
+        <input class="btn btn-danger" type="button" value="log out" onClick="logout()">
     </div>
        
     <div id="productDiv" style="float: left; clear: both; padding-left: 10px;width: 75%;border:  blue;">
@@ -75,7 +76,7 @@
               </tbody>
         </table>
     </div>
-    
+    </br>
     <div  id="cartDiv" style="float:right;padding-right: 50px;width: 20%;text-align: center;margin-top: 25px;">
         <h4>Shopping Cart : </h4>
         <table id="cartTable" style="width: 100%; margin-top: 20px;">
@@ -119,7 +120,16 @@
             };
             
             placeOrder = function(){
+                    if( parseFloat($("#totalSpan").html())  <=0 ){
+                        console.log("please choose first");
+                        alert("please choose some product first");
+                        return;
+                    }
                     window.location.href = "placeOrder";
+            };
+            
+            logout = function(){
+                    window.location.href = "logout";
             };
               
         </script>
